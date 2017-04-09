@@ -130,6 +130,12 @@ fuzz_check_config(apr_pool_t * p, apr_pool_t * plog,
     return OK;
 }
 
+static void just_die(int code) __attribute__ ((noreturn));
+static void just_die(int code)
+{
+    exit(code);
+}
+
 static void fuzz_hooks(apr_pool_t * p)
 {
     static const char *const aszSucc[] = { "core.c", NULL };
@@ -143,6 +149,9 @@ static void fuzz_hooks(apr_pool_t * p)
     ap_hook_mpm_query(fuzz_query, NULL, NULL, APR_HOOK_MIDDLE);
 
     ap_hook_mpm_get_name(fuzz_get_name, NULL, NULL, APR_HOOK_MIDDLE);
+    
+    apr_signal(SIGHUP, just_die);
+    apr_signal(SIGTERM, just_die);
 }
 
 static const command_rec fuzz_cmds[] = {

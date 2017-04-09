@@ -145,7 +145,8 @@ static apr_status_t fuzz_wait_input_thread(fuzz_conn_t *fcon);
 int fuzz_main_loop(apr_pool_t * pconf, apr_pool_t * plog, server_rec * s) {
     apr_status_t rv;
 
-    while (__AFL_LOOP(1)) {
+    // while (__AFL_LOOP(1)) {
+    do {
         apr_pool_t *ptrans = NULL;
 
         /*
@@ -211,7 +212,8 @@ int fuzz_main_loop(apr_pool_t * pconf, apr_pool_t * plog, server_rec * s) {
         */
         apr_bucket_alloc_destroy(fcon->ba);
         apr_pool_destroy(ptrans);
-    }
+    }  while(false);
+
     return OK;
 }
 
@@ -280,8 +282,10 @@ static void *input_thread_func(apr_thread_t *t, void *v) {
             }
         }
 
+        /*
         ap_log_perror(APLOG_MARK, APLOG_STARTUP|APLOG_CRIT, 0, fcon->input_pool,
                         "client send size: %" APR_SIZE_T_FMT, nbytes);
+         */
         rv = apr_socket_send(fcon->client_sock,
             buf, &nbytes);
 
