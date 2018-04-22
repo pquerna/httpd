@@ -59,6 +59,9 @@ typedef struct ap_log_handler {
 APR_DECLARE_OPTIONAL_FN(void, ap_register_log_handler,
                         (apr_pool_t *p, char *tag, ap_log_handler_fn_t *func,
                          int def));
+
+APR_DECLARE_OPTIONAL_FN(ap_log_handler*, ap_log_get_handler, (char *tag));
+
 /**
  * you will need to set your init handler *BEFORE* the open_logs
  * in mod_log_config gets executed

@@ -1624,6 +1624,13 @@ static void ap_register_log_handler(apr_pool_t *p, char *tag,
 
     apr_hash_set(log_hash, tag, strlen(tag), (const void *)log_struct);
 }
+
+static ap_log_handler* ap_log_get_handler(char *tag)
+{
+    ap_log_handler *handler = (ap_log_handler *)apr_hash_get(log_hash, tag, strlen(tag));
+    return handler;
+}
+
 static ap_log_writer_init *ap_log_set_writer_init(ap_log_writer_init *handle)
 {
     ap_log_writer_init *old = log_writer_init;
@@ -1941,6 +1948,7 @@ static void register_hooks(apr_pool_t *p)
      */
     log_hash = apr_hash_make(p);
     APR_REGISTER_OPTIONAL_FN(ap_register_log_handler);
+    APR_REGISTER_OPTIONAL_FN(ap_log_get_handler);
     APR_REGISTER_OPTIONAL_FN(ap_log_set_writer_init);
     APR_REGISTER_OPTIONAL_FN(ap_log_set_writer);
 }
